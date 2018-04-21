@@ -1,0 +1,83 @@
+#include<stdio.h>
+int find(int a[9][9], int start, int *r, int *c)
+{
+	int i, j;
+	for (i = start;i < 9;i++)
+	{
+		for(j=0;j<9;j++)
+			if (a[i][j] == 0)
+			{
+				*r = i;
+				*c = j;
+				return 1;
+			}
+	}
+	return 0;
+}
+int qiujie(int a[9][9], int r, int c)
+{
+	int i, j, n;
+	int next_r, next_c;
+	int p, q;
+	n = 0;
+	while (1)
+	{
+	next:
+		n++;
+		if (n >= 10) break;
+		for (j = 0;j < 9;j++)
+		{
+			if (a[r][j] == n)
+			{
+				goto next;
+			}
+		}
+		for (i = 0;i < 9;i++)
+		{
+			if (a[i][c] == n) {
+				goto next;
+			}
+		}
+		p = (r / 3) * 3;
+		q = (c / 3) * 3;
+		for (i = p;i < p + 3;i++)
+		{
+			for (j = q;j < q + 3;j++)
+			{
+				if (a[i][j] == n)
+					goto next;
+			}
+		}
+		a[r][c] = n;
+		if (find(a, r, &next_r, &next_c) == 0)
+			return 1;
+		if (qiujie(a, next_r, next_c) == 0)
+		{
+			a[r][c] = 0;
+			continue;
+		}
+		else return 1;
+	}
+	return 0;
+}
+int main()
+{
+	int i, j, s, t, flag, a[9][9];
+	for(i=0;i<9;i++)
+	{ 
+		for (j = 0;j < 9;j++)
+		{
+			scanf("%d",&a[i][j]);
+		}
+	}
+	int row, col;
+	find(a, 0, &row, &col);
+	qiujie(a, row, col);
+	for (i = 0;i < 9;i++)
+	{
+		for (j = 0;j < 9;j++)
+			printf("%d ", a[i][j]);
+		printf("\n");
+	}
+	return 0;
+}
